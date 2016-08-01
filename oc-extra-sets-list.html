@@ -54,7 +54,7 @@ Element displaying a list of product extra sets
           </data-table-column>
           <data-table-column name="Enabled" sort-by="enabled">
             <template>
-              <paper-checkbox checked="[[item.enabled]]" on-change="_enabledHandler"></paper-checkbox>
+              <paper-checkbox item="[[item]]" checked="[[item.enabled]]" on-change="_enabledHandler"></paper-checkbox>
             </template>
           </data-table-column>
           <data-table-column name="Actions" hidden$="[[ actionsHidden ]]">
@@ -106,10 +106,18 @@ Element displaying a list of product extra sets
         this.fire('create');
       },
 
-      _actionHandler : function(e) {
+      _actionHandler: function(e) {
         var extraObj = JSON.parse(Polymer.dom(event).localTarget.parentElement.getAttribute('data-option-object')),
                 action = e.target.getAttribute('id');
         this.fire(action, extraObj);
+      },
+
+      _enabledHandler: function(e) {
+        if (e.target.checked) {
+          this.fire('enable-extra-set', e.target.item);
+        } else {
+          this.fire('disable-extra-set', e.target.item);
+        }
       },
 
       selectItem: function(item) {
