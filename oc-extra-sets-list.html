@@ -1,6 +1,7 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-material/paper-material.html">
+<link rel="import" href="../paper-checkbox/paper-checkbox.html">
 
 <link rel="import" href="../iron-data-table/iron-data-table.html">
 
@@ -10,7 +11,7 @@
 `oc-extra-sets-list`
 Element displaying a list of product extra sets
 
-@demo demo/index.html 
+@demo demo/index.html
 -->
 
 <dom-module id="oc-extra-sets-list">
@@ -23,12 +24,49 @@ Element displaying a list of product extra sets
       background-color: #fff;
       padding: 10px;
     }
-    .new-option-set-button {
+    .new-extra-set-button {
       margin: 10px;
     }
   </style>
 
   <template>
+    <paper-material>
+      <div hidden$="[[ actionsHidden ]]">
+        <paper-button id="_newExtraSetButton"class="new-extra-set-button" on-tap="_onCreateTapped">New Extra Set</paper-button>
+      </div>
+      <oc-grid-controls data="[[ items ]]" total-count="[[ totalItems ]]" num-entries="[[ pageSize ]]">
+        <iron-data-table
+                id="dataTable"
+                selection-enabled="[[ multiSelect ]]"
+                multi-selection="[[ multiSelect ]]"
+                selected-items="{{ selectedItems }}"
+                selected-item="{{ _selectedItem }}"
+                current-page="[[ currentPage ]]"
+                loading="{{ loading }}">
+          <data-table-column name="Name" sort-by="name">
+            <template>[[item.name]]</template>
+          </data-table-column>
+          <data-table-column name="Display Name" sort-by="displayName">
+            <template>[[item.displayName]]</template>
+          </data-table-column>
+          <data-table-column name="Extras" sort-by="extras">
+            <template is="dom-repeat" item="[[item.extras]]" as="extra">[[extra.name]]</template>
+          </data-table-column>
+          <data-table-column name="Enabled" sort-by="enabled">
+            <template>
+              <paper-checkbox checked="[[item.enabled]]" on-change="_enabledHandler"></paper-checkbox>
+            </template>
+          </data-table-column>
+          <data-table-column name="Actions" hidden$="[[ actionsHidden ]]">
+            <template>
+              <div data-option-object$="[[ item ]]">
+                <paper-icon-button id="edit" icon="create" title="Edit Set"  on-tap="_actionHandler"></paper-icon-button>
+              </div>
+            </template>
+          </data-table-column>
+        </iron-data-table>
+      </oc-grid-controls>
+    </paper-material>
   </template>
 
   <script>
@@ -37,12 +75,46 @@ Element displaying a list of product extra sets
       is: 'oc-extra-sets-list',
 
       properties: {
-        prop1: {
-          type: String,
-          value: 'oc-extra-sets-list',
+        loading: {
+          type: Boolean,
+          notify: true
         },
+        actionsHidden: {
+          type: Boolean,
+          value: false
+        },
+        multiSelect: {
+          type: Boolean,
+          value: false
+        },
+        selectedItems: {
+          type: Array,
+          value: [],
+          notify: true
+        },
+        items: Array,
+        totalItems: Number,
+        pageSize: Number,
+        currentPage: Number
       },
 
+      _onPageRequest: function(event) {
+        this.fire('page-request', event);
+      },
+
+      _onCreateTapped: function() {
+        this.fire('create');
+      },
+
+      _actionHandler : function(e) {
+        var extraObj = JSON.parse(Polymer.dom(event).localTarget.parentElement.getAttribute('data-option-object')),
+                action = e.target.getAttribute('id');
+        this.fire(action, extraObj);
+      },
+
+      selectItem: function(item) {
+        this.$.dataTable.selectItem(item);
+      }
     });
   </script>
 </dom-module>
