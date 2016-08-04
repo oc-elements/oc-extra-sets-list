@@ -61,10 +61,12 @@ Element displaying a list of product extra sets
             <template>
               <div data-option-object$="[[ item ]]">
                 <paper-icon-button id="edit" icon="create" title="Edit Set"  on-tap="_actionHandler"></paper-icon-button>
-                <paper-icon-button id="delete" icon="delete" title="Delete Set"  on-tap="_actionHandler"></paper-icon-button>
+
                 <template is="dom-if" if="{{cloneActive}}">
                   <paper-icon-button id="clone" icon="content-copy" title="Clone Set" data-option-id$="{{item.id}}" data-option-name$="{{item.name}}" on-tap="_cloneHandler"></paper-icon-button>
                 </template>
+
+                <paper-icon-button id="delete" icon="delete" title="Delete Set"  on-tap="_actionHandler"></paper-icon-button>
               </div>
             </template>
           </data-table-column>
