@@ -62,6 +62,9 @@ Element displaying a list of product extra sets
               <div data-option-object$="[[ item ]]">
                 <paper-icon-button id="edit" icon="create" title="Edit Set"  on-tap="_actionHandler"></paper-icon-button>
                 <paper-icon-button id="delete" icon="delete" title="Delete Set"  on-tap="_actionHandler"></paper-icon-button>
+                <template is="dom-if" if="{{cloneActive}}">
+                  <paper-icon-button id="clone" icon="content-copy" title="Clone Set" data-option-id$="{{item.id}}" data-option-name$="{{item.name}}" on-tap="_cloneHandler"></paper-icon-button>
+                </template>
               </div>
             </template>
           </data-table-column>
@@ -96,7 +99,8 @@ Element displaying a list of product extra sets
         items: Array,
         totalItems: Number,
         pageSize: Number,
-        currentPage: Number
+        currentPage: Number,
+        cloneActive: Boolean
       },
 
       _onPageRequest: function(event) {
@@ -123,7 +127,15 @@ Element displaying a list of product extra sets
 
       selectItem: function(item) {
         this.$.dataTable.selectItem(item);
+      },
+
+      _cloneHandler : function(e){
+        var params = {};
+        params.id = Polymer.dom(e).localTarget.getAttribute('data-option-id');
+        params.name = Polymer.dom(e).localTarget.getAttribute('data-option-name');
+        this.fire("clone-set", params);
       }
+
     });
   </script>
 </dom-module>
