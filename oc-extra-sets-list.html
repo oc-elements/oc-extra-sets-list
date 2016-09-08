@@ -50,7 +50,7 @@ Element displaying a list of product extra sets
             <template>[[item.displayName]]</template>
           </data-table-column>
           <data-table-column name="Extras" sort-by="extras">
-            <template is="dom-repeat" item="[[item.extras]]" as="extra">[[extra.name]]</template>
+            <template>[[_extrasCalc(item.extras)]]</template>
           </data-table-column>
           <data-table-column name="Enabled" sort-by="enabled">
             <template>
@@ -136,8 +136,13 @@ Element displaying a list of product extra sets
         params.id = Polymer.dom(e).localTarget.getAttribute('data-option-id');
         params.name = Polymer.dom(e).localTarget.getAttribute('data-option-name');
         this.fire("clone-set", params);
-      }
+      },
 
+      _extrasCalc : function(extras) {
+        var extraNames = extras.map(function(extra){ return extra.name});
+
+        return (extras.length) ? extraNames.join(', ') : "No Extras"
+      }
     });
   </script>
 </dom-module>
