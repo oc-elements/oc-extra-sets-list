@@ -32,7 +32,7 @@ Element displaying a list of product extra sets
   <template>
     <paper-material>
       <div hidden$="[[ actionsHidden ]]">
-        <paper-button id="_newExtraSetButton" class="new-extra-set-button" on-tap="_onCreateTapped">New Extra Set</paper-button>
+        <paper-button raised id="_newExtraSetButton" class="new-extra-set-button" on-tap="_onCreateTapped">New Extra Set</paper-button>
       </div>
       <oc-grid-controls data="[[ items ]]" total-count="[[ totalItems ]]" num-entries="[[ pageSize ]]">
         <iron-data-table
